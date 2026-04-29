@@ -1,0 +1,907 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="PaperPlane game studio official website" />
+    <title>PaperPlane Studio</title>
+    <style>
+      :root {
+        --bg: #060914;
+        --panel: rgba(13, 19, 38, 0.78);
+        --panel-strong: #101831;
+        --line: rgba(139, 166, 255, 0.22);
+        --text: #f4f7ff;
+        --muted: #9aa8c7;
+        --blue: #6f8dff;
+        --cyan: #43e6ff;
+        --pink: #ff5fa2;
+        --gold: #ffd166;
+        --shadow: 0 28px 90px rgba(0, 0, 0, 0.46);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 75% 10%, rgba(67, 230, 255, 0.18), transparent 30rem),
+          radial-gradient(circle at 12% 18%, rgba(255, 95, 162, 0.13), transparent 28rem),
+          linear-gradient(180deg, #081025 0%, #060914 46%, #090b14 100%);
+        letter-spacing: 0;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background-image:
+          linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+        background-size: 64px 64px;
+        mask-image: linear-gradient(180deg, rgba(0,0,0,.9), transparent 78%);
+      }
+
+      a { color: inherit; text-decoration: none; }
+      button, input, textarea { font: inherit; }
+
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 28px;
+        padding: 18px clamp(20px, 5vw, 78px);
+        background: rgba(6, 9, 20, 0.74);
+        border-bottom: 1px solid var(--line);
+        backdrop-filter: blur(18px);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 1.1rem;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      .mark {
+        position: relative;
+        display: grid;
+        width: 44px;
+        height: 44px;
+        place-items: center;
+        color: #06101d;
+        background: linear-gradient(135deg, var(--cyan), var(--blue));
+        border-radius: 12px;
+        box-shadow: 0 0 26px rgba(67, 230, 255, 0.35);
+      }
+
+      .mark::after {
+        content: "";
+        position: absolute;
+        top: -7px;
+        right: -8px;
+        width: 26px;
+        height: 18px;
+        background: #fff;
+        clip-path: polygon(0 45%, 100% 0, 62% 100%);
+        transform: rotate(-18deg);
+      }
+
+      .nav-links {
+        display: flex;
+        justify-content: center;
+        gap: clamp(18px, 4vw, 58px);
+        color: var(--muted);
+        font-weight: 800;
+      }
+
+      .nav-links a {
+        position: relative;
+        padding: 10px 0;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--cyan), var(--pink));
+        opacity: 0;
+        transform: scaleX(.45);
+        transition: opacity 180ms ease, transform 180ms ease;
+      }
+
+      .nav-links a:hover,
+      .nav-links a.is-active { color: var(--text); }
+
+      .nav-links a.is-active::after,
+      .nav-links a:hover::after {
+        opacity: 1;
+        transform: scaleX(1);
+      }
+
+      .nav-cta {
+        min-height: 42px;
+        display: inline-flex;
+        align-items: center;
+        padding: 0 18px;
+        border: 1px solid rgba(67, 230, 255, 0.5);
+        border-radius: 999px;
+        color: var(--cyan);
+        font-weight: 900;
+      }
+
+      .hero {
+        position: relative;
+        min-height: 760px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(320px, .72fr);
+        gap: clamp(34px, 6vw, 90px);
+        align-items: center;
+        padding: clamp(70px, 9vw, 130px) clamp(20px, 5vw, 78px) 72px;
+        overflow: hidden;
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: auto 0 0;
+        height: 190px;
+        background: linear-gradient(0deg, var(--bg), transparent);
+        pointer-events: none;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        gap: 10px;
+        align-items: center;
+        margin: 0 0 18px;
+        color: var(--cyan);
+        font-size: .86rem;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 34px;
+        height: 2px;
+        background: var(--cyan);
+        box-shadow: 0 0 18px var(--cyan);
+      }
+
+      h1, h2, h3, p { margin-top: 0; }
+
+      h1 {
+        max-width: 900px;
+        margin-bottom: 24px;
+        font-size: clamp(4rem, 9vw, 8.9rem);
+        line-height: .88;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      h1 span {
+        display: block;
+        color: transparent;
+        -webkit-text-stroke: 2px rgba(255,255,255,.78);
+      }
+
+      .hero-copy {
+        position: relative;
+        z-index: 2;
+      }
+
+      .hero-copy p {
+        max-width: 660px;
+        color: var(--muted);
+        font-size: clamp(1.04rem, 1.6vw, 1.24rem);
+        line-height: 1.82;
+        font-weight: 700;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 36px;
+      }
+
+      .btn {
+        display: inline-flex;
+        min-height: 54px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0 24px;
+        color: var(--text);
+        background: rgba(255,255,255,.06);
+        font-weight: 900;
+        cursor: pointer;
+      }
+
+      .btn.primary {
+        border: 0;
+        color: #04101d;
+        background: linear-gradient(135deg, var(--cyan), var(--blue));
+        box-shadow: 0 0 38px rgba(67, 230, 255, .26);
+      }
+
+      .stage {
+        position: relative;
+        z-index: 2;
+        min-height: 520px;
+      }
+
+      .planet {
+        position: absolute;
+        inset: 36px 0 auto auto;
+        width: min(520px, 44vw);
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at 32% 28%, rgba(255,255,255,.92), transparent 0 4%, transparent 5%),
+          radial-gradient(circle at 35% 30%, rgba(67,230,255,.9), transparent 0 12%, transparent 13%),
+          radial-gradient(circle at 60% 72%, rgba(255,95,162,.5), transparent 0 15%, transparent 16%),
+          linear-gradient(145deg, #213d8f, #101831 58%, #050713);
+        box-shadow: inset -48px -46px 80px rgba(0,0,0,.42), 0 0 90px rgba(67,230,255,.22);
+      }
+
+      .ring {
+        position: absolute;
+        inset: 138px -38px auto auto;
+        width: min(610px, 52vw);
+        height: 150px;
+        border: 2px solid rgba(67, 230, 255, .38);
+        border-left-color: transparent;
+        border-right-color: transparent;
+        border-radius: 50%;
+        transform: rotate(-16deg);
+      }
+
+      .ship {
+        position: absolute;
+        left: 9%;
+        top: 48%;
+        width: 170px;
+        height: 74px;
+        background: linear-gradient(135deg, #fff, #8fa7ff 58%, #2b3f93);
+        clip-path: polygon(0 58%, 100% 0, 72% 100%, 45% 64%);
+        filter: drop-shadow(0 0 28px rgba(67,230,255,.5));
+        animation: floatShip 4.2s ease-in-out infinite;
+      }
+
+      .ship::after {
+        content: "";
+        position: absolute;
+        left: -60px;
+        top: 30px;
+        width: 76px;
+        height: 8px;
+        background: linear-gradient(90deg, transparent, var(--cyan));
+        border-radius: 999px;
+      }
+
+      @keyframes floatShip {
+        0%, 100% { transform: translateY(0) rotate(-8deg); }
+        50% { transform: translateY(-18px) rotate(-4deg); }
+      }
+
+      .stats {
+        position: relative;
+        z-index: 3;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1px;
+        margin: -68px clamp(20px, 5vw, 78px) 0;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        background: var(--line);
+        box-shadow: var(--shadow);
+      }
+
+      .stat {
+        padding: 26px;
+        background: rgba(12, 18, 36, .86);
+      }
+
+      .stat strong {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--cyan);
+        font-size: 2rem;
+      }
+
+      .stat span {
+        color: var(--muted);
+        font-weight: 800;
+      }
+
+      .section {
+        padding: clamp(78px, 10vw, 130px) clamp(20px, 5vw, 78px);
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 24px;
+        margin-bottom: 34px;
+      }
+
+      h2 {
+        margin-bottom: 0;
+        font-size: clamp(2.3rem, 5vw, 4.8rem);
+        line-height: .96;
+        text-transform: uppercase;
+      }
+
+      .section-head p {
+        max-width: 460px;
+        color: var(--muted);
+        line-height: 1.75;
+        font-weight: 700;
+      }
+
+      .project-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .project-card {
+        min-height: 500px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        background: var(--panel-strong);
+        cursor: pointer;
+        box-shadow: var(--shadow);
+        transition: transform 180ms ease, border-color 180ms ease;
+      }
+
+      .project-card:hover,
+      .project-card:focus-visible {
+        transform: translateY(-8px);
+        border-color: rgba(67, 230, 255, .7);
+        outline: none;
+      }
+
+      .project-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: var(--art);
+      }
+
+      .project-card.has-video::before {
+        display: none;
+      }
+
+      .project-video {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        background: #050713;
+        transform: scale(1.01);
+      }
+
+      .project-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: linear-gradient(180deg, transparent 0%, rgba(6,9,20,.28) 42%, rgba(6,9,20,.96) 100%);
+      }
+
+      .project-card:nth-child(1) { --art: radial-gradient(circle at 72% 26%, rgba(67,230,255,.9), transparent 0 14%, transparent 15%), linear-gradient(135deg, #152759, #2d1d52 52%, #09101f); }
+      .project-card:nth-child(2) { --art: radial-gradient(circle at 50% 28%, rgba(255,209,102,.96), transparent 0 8%, transparent 9%), radial-gradient(circle at 50% 30%, rgba(111,141,255,.72), transparent 0 24%, transparent 25%), linear-gradient(180deg, #0e1a42, #111629 66%, #05060c); }
+      .project-card:nth-child(3) { --art: linear-gradient(180deg, #4568aa, #131b37 48%, #07101c), repeating-linear-gradient(90deg, transparent 0 36px, rgba(255,255,255,.08) 36px 38px); }
+
+      .project-body {
+        position: relative;
+        z-index: 2;
+        padding: 28px;
+      }
+
+      .tag {
+        display: inline-flex;
+        margin-bottom: 14px;
+        padding: 7px 11px;
+        border: 1px solid rgba(255,255,255,.18);
+        border-radius: 999px;
+        color: var(--cyan);
+        background: rgba(6,9,20,.42);
+        font-size: .78rem;
+        font-weight: 900;
+      }
+
+      .project-body h3 {
+        margin-bottom: 12px;
+        font-size: 1.65rem;
+      }
+
+      .project-body p {
+        margin: 0;
+        color: #c5cce0;
+        line-height: 1.7;
+        font-weight: 700;
+      }
+
+      .about-grid {
+        display: grid;
+        grid-template-columns: .75fr 1fr;
+        gap: 20px;
+      }
+
+      .about-panel,
+      .value {
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+      }
+
+      .about-panel {
+        padding: 34px;
+      }
+
+      .about-panel p {
+        color: var(--muted);
+        line-height: 1.82;
+        font-weight: 700;
+      }
+
+      .value-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .value {
+        padding: 28px;
+      }
+
+      .value span {
+        display: inline-grid;
+        width: 46px;
+        height: 46px;
+        margin-bottom: 24px;
+        place-items: center;
+        color: #06101d;
+        background: linear-gradient(135deg, var(--gold), var(--pink));
+        border-radius: 14px;
+        font-weight: 900;
+      }
+
+      .value h3 {
+        margin-bottom: 10px;
+        font-size: 1.2rem;
+      }
+
+      .value p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.65;
+        font-weight: 700;
+      }
+
+      .career {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 28px;
+        border: 1px solid rgba(67,230,255,.32);
+        border-radius: 26px;
+        padding: 34px;
+        background: linear-gradient(135deg, rgba(67,230,255,.12), rgba(255,95,162,.1));
+      }
+
+      .career p {
+        margin-bottom: 0;
+        max-width: 720px;
+        color: var(--muted);
+        line-height: 1.75;
+        font-weight: 700;
+      }
+
+      .contact {
+        display: grid;
+        grid-template-columns: .8fr 1fr;
+        gap: 24px;
+        align-items: start;
+      }
+
+      .contact-card,
+      .contact-form {
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+      }
+
+      .contact-card {
+        padding: 34px;
+      }
+
+      .contact-card p {
+        color: var(--muted);
+        line-height: 1.75;
+        font-weight: 700;
+      }
+
+      .contact-form {
+        display: grid;
+        gap: 14px;
+        padding: 28px;
+      }
+
+      .contact-form input,
+      .contact-form textarea {
+        width: 100%;
+        border: 1px solid rgba(255,255,255,.12);
+        border-radius: 14px;
+        padding: 15px 16px;
+        color: var(--text);
+        background: rgba(255,255,255,.06);
+        outline: none;
+      }
+
+      .contact-form input:focus,
+      .contact-form textarea:focus {
+        border-color: var(--cyan);
+      }
+
+      .contact-form textarea {
+        min-height: 150px;
+        resize: vertical;
+      }
+
+      .contact-form button {
+        min-height: 54px;
+        border: 0;
+        border-radius: 999px;
+        color: #06101d;
+        background: linear-gradient(135deg, var(--cyan), var(--blue));
+        font-weight: 900;
+        cursor: pointer;
+      }
+
+      .modal {
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        display: none;
+        place-items: center;
+        padding: 24px;
+        background: rgba(0,0,0,.62);
+        backdrop-filter: blur(10px);
+      }
+
+      .modal.is-open { display: grid; }
+
+      .modal-card {
+        width: min(660px, 100%);
+        border: 1px solid rgba(67,230,255,.32);
+        border-radius: 26px;
+        padding: 34px;
+        background: #0b1022;
+        box-shadow: var(--shadow);
+      }
+
+      .modal-card h3 {
+        margin-bottom: 14px;
+        color: var(--cyan);
+        font-size: 2rem;
+      }
+
+      .modal-card p {
+        color: var(--muted);
+        line-height: 1.8;
+        font-weight: 700;
+      }
+
+      .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 22px;
+      }
+
+      .modal-actions button {
+        min-height: 44px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0 18px;
+        color: var(--text);
+        background: rgba(255,255,255,.06);
+        cursor: pointer;
+        font-weight: 900;
+      }
+
+      .toast {
+        position: fixed;
+        right: 28px;
+        bottom: 28px;
+        z-index: 70;
+        padding: 16px 18px;
+        color: #06101d;
+        background: linear-gradient(135deg, var(--cyan), var(--blue));
+        border-radius: 16px;
+        box-shadow: 0 18px 42px rgba(67,230,255,.18);
+        font-weight: 900;
+        opacity: 0;
+        transform: translateY(14px);
+        pointer-events: none;
+        transition: opacity 180ms ease, transform 180ms ease;
+      }
+
+      .toast.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 1040px) {
+        .nav { grid-template-columns: 1fr; }
+        .nav-links { justify-content: flex-start; flex-wrap: wrap; }
+        .nav-cta { width: fit-content; }
+        .hero,
+        .about-grid,
+        .contact { grid-template-columns: 1fr; }
+        .stage { min-height: 420px; }
+        .planet { width: min(520px, 86vw); }
+        .ring { width: min(610px, 96vw); }
+        .project-grid { grid-template-columns: 1fr; }
+      }
+
+      @media (max-width: 680px) {
+        h1 { font-size: 4rem; }
+        .hero { min-height: 820px; padding-top: 56px; }
+        .stats,
+        .value-grid,
+        .career { grid-template-columns: 1fr; }
+        .section-head { display: grid; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="nav">
+      <a class="brand" href="#home">
+        <span class="mark">P</span>
+        <span>PaperPlane</span>
+      </a>
+      <nav class="nav-links" aria-label="main navigation">
+        <a class="is-active" href="#home" data-nav>Home</a>
+        <a href="#projects" data-nav>Projects</a>
+        <a href="#about" data-nav>Studio</a>
+        <a href="#career" data-nav>Career</a>
+        <a href="#contact" data-nav>Contact</a>
+      </nav>
+      <a class="nav-cta" href="#contact">Pitch Us</a>
+    </header>
+
+    <main id="home">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Independent Game Studio</p>
+          <h1>Make Worlds <span>Worth Playing</span></h1>
+          <p>
+            PaperPlane은 액션, 모험, 감정적인 세계관을 결합해 오래 기억되는 게임 경험을
+            만드는 스튜디오입니다. 작은 아이디어를 강렬한 플레이로 바꿉니다.
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#projects">Watch Showcase</a>
+            <a class="btn" href="#about">Studio Identity</a>
+          </div>
+        </div>
+        <div class="stage" aria-hidden="true">
+          <div class="planet"></div>
+          <div class="ring"></div>
+          <div class="ship"></div>
+        </div>
+      </section>
+
+      <section class="stats" aria-label="studio highlights">
+        <div class="stat"><strong>03</strong><span>Playable Game Projects</span></div>
+        <div class="stat"><strong>2D</strong><span>Action, Adventure, Platformer</span></div>
+        <div class="stat"><strong>AI</strong><span>Boss Pattern and Gameplay Systems</span></div>
+      </section>
+
+      <section class="section" id="projects">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Featured Games</p>
+            <h2>Projects</h2>
+          </div>
+          <p>카드를 클릭하면 프로젝트 상세 설명을 볼 수 있습니다. 쇼케이스처럼 빠르게 훑고, 관심 있는 게임은 자세히 확인하세요.</p>
+        </div>
+
+        <div class="project-grid">
+          <article class="project-card has-video" tabindex="0" data-project="Other You" data-desc="보스 AI 시스템, 로그라이크 성장 구조, 빠른 2D 액션 전투를 중심으로 제작한 프로젝트입니다. 반복 플레이에서 매번 다른 긴장감을 주는 것을 목표로 합니다.">
+            <video class="project-video" src="assets/videos/OtherYouVideo.mp4" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
+            <div class="project-body">
+              <span class="tag">Action RPG</span>
+              <h3>Other You</h3>
+              <p>보스 AI와 로그라이크 요소가 결합된 2D 액션 RPG.</p>
+            </div>
+          </article>
+
+          <article class="project-card has-video" tabindex="0" data-project="ProjectD" data-desc="ProjectD는 빠른 프로토타이핑과 강렬한 장면 연출을 중심으로 제작 중인 프로젝트입니다. 영상 쇼케이스를 통해 핵심 분위기와 플레이 감각을 보여줍니다.">
+            <video class="project-video" src="assets/videos/ProjectDVideo.mp4" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
+            <div class="project-body">
+              <span class="tag">Adventure</span>
+              <h3>ProjectD</h3>
+              <p>강렬한 분위기와 액션 연출을 중심으로 제작 중인 프로젝트.</p>
+            </div>
+          </article>
+
+          <article class="project-card" tabindex="0" data-project="룰링의 모험" data-desc="정교한 점프, 플랫폼 배치, 스테이지 난이도 흐름을 실험하는 2D 플랫폼 게임입니다. 조작감과 리듬을 핵심으로 제작했습니다.">
+            <div class="project-body">
+              <span class="tag">Platformer</span>
+              <h3>룰링의 모험</h3>
+              <p>컨트롤과 레벨 디자인을 강조한 2D 플랫폼 게임.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="about">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Studio DNA</p>
+            <h2>About</h2>
+          </div>
+          <p>PaperPlane은 게임의 재미를 시스템, 감정, 비주얼의 균형으로 바라봅니다.</p>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-panel">
+            <h3>게임은 기억에 남는 순간을 만드는 일입니다.</h3>
+            <p>
+              우리는 작은 장면 하나도 플레이어가 직접 움직이고 판단하며 느낄 수 있도록 설계합니다.
+              Unity와 C# 기반의 빠른 프로토타이핑으로 아이디어를 실제 플레이 경험까지 밀어붙입니다.
+            </p>
+          </div>
+          <div class="value-grid">
+            <div class="value"><span>01</span><h3>Creative Systems</h3><p>아이디어가 시스템으로 작동하도록 구조화합니다.</p></div>
+            <div class="value"><span>02</span><h3>Sharp Gameplay</h3><p>조작감, 타격감, 리듬을 끝까지 다듬습니다.</p></div>
+            <div class="value"><span>03</span><h3>Team Play</h3><p>기획, 아트, 개발이 같은 목표를 향해 움직입니다.</p></div>
+            <div class="value"><span>04</span><h3>Bold Challenge</h3><p>작지만 강렬한 시도를 통해 성장합니다.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="career">
+        <div class="career">
+          <div>
+            <p class="eyebrow">Join the Flight</p>
+            <h2>Career</h2>
+            <p>새로운 게임을 함께 만들 동료와 협업 제안을 기다립니다. 기획, 아트, 클라이언트 개발, 사운드 등 어떤 형태의 제안도 환영합니다.</p>
+          </div>
+          <a class="btn primary" href="#contact" data-apply>Apply Now</a>
+        </div>
+      </section>
+
+      <section class="section contact" id="contact">
+        <div class="contact-card">
+          <p class="eyebrow">Contact</p>
+          <h2>Start a Project</h2>
+          <p>협업, 프로젝트 문의, 채용 관련 메시지를 남겨주세요. 폼을 제출하면 화면에 접수 알림이 표시됩니다.</p>
+        </div>
+        <form class="contact-form" data-contact-form>
+          <input type="text" name="name" placeholder="이름" required />
+          <input type="email" name="email" placeholder="이메일" required />
+          <textarea name="message" placeholder="문의 내용을 적어주세요." required></textarea>
+          <button type="submit">Send Message</button>
+        </form>
+      </section>
+    </main>
+
+    <div class="modal" data-modal aria-hidden="true">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <h3 id="modal-title" data-modal-title></h3>
+        <p data-modal-desc></p>
+        <div class="modal-actions">
+          <button type="button" data-modal-close>Close</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" data-toast>문의가 접수되었습니다. 빠르게 확인하겠습니다.</div>
+
+    <script>
+      const navLinks = document.querySelectorAll("[data-nav]");
+      const sections = [...navLinks].map((link) => document.querySelector(link.getAttribute("href"))).filter(Boolean);
+      const modal = document.querySelector("[data-modal]");
+      const modalTitle = document.querySelector("[data-modal-title]");
+      const modalDesc = document.querySelector("[data-modal-desc]");
+      const modalClose = document.querySelector("[data-modal-close]");
+      const toast = document.querySelector("[data-toast]");
+      const contactForm = document.querySelector("[data-contact-form]");
+
+      navLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          navLinks.forEach((item) => item.classList.remove("is-active"));
+          link.classList.add("is-active");
+        });
+      });
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          navLinks.forEach((link) => {
+            link.classList.toggle("is-active", link.getAttribute("href") === `#${entry.target.id}`);
+          });
+        });
+      }, { rootMargin: "-42% 0px -45% 0px", threshold: 0 });
+
+      sections.forEach((section) => observer.observe(section));
+
+      const openProject = (card) => {
+        modalTitle.textContent = card.dataset.project;
+        modalDesc.textContent = card.dataset.desc;
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+        modalClose.focus();
+      };
+
+      document.querySelectorAll("[data-project]").forEach((card) => {
+        card.addEventListener("click", () => openProject(card));
+        card.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openProject(card);
+          }
+        });
+      });
+
+      const closeModal = () => {
+        modal.classList.remove("is-open");
+        modal.setAttribute("aria-hidden", "true");
+      };
+
+      modalClose.addEventListener("click", closeModal);
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) closeModal();
+      });
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeModal();
+      });
+
+      contactForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        toast.classList.add("is-visible");
+        contactForm.reset();
+        window.setTimeout(() => toast.classList.remove("is-visible"), 2600);
+      });
+
+      document.querySelector("[data-apply]").addEventListener("click", () => {
+        window.setTimeout(() => {
+          contactForm.querySelector("textarea").value = "Career 문의: PaperPlane과 함께 게임을 만들고 싶습니다.";
+          contactForm.querySelector("input").focus();
+        }, 320);
+      });
+    </script>
+  </body>
+</html>
